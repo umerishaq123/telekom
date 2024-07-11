@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:iconsax/iconsax.dart';
+
 
 import '../../utils/ColorPath.dart';
 import 'ResetPassword.dart';
@@ -41,7 +41,7 @@ class ForgotScreen extends StatelessWidget {
               expands: false,
               decoration: const InputDecoration(
                 labelText: "Email",
-                prefixIcon: Icon(Iconsax.direct),
+                prefixIcon: Icon(Icons.email),
                 border: OutlineInputBorder(
                   borderRadius:
                   BorderRadius.all(Radius.circular(16)),

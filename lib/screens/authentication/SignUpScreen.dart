@@ -2,9 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:telkom/utils/ColorPath.dart';
+import 'package:telekom2/utils/ColorPath.dart';
+
 
 import '../homescreeen/HomeScreen.dart';
 
@@ -38,7 +37,7 @@ class SignUpScreen extends StatelessWidget {
                   expands: false,
                   decoration: const InputDecoration(
                     labelText: "name",
-                    prefixIcon: Icon(Iconsax.user),
+                    prefixIcon: Icon(Icons.person),
                     focusedBorder: OutlineInputBorder(
                       borderRadius:
                       BorderRadius.all(Radius.circular(16)),
@@ -120,7 +119,7 @@ class SignUpScreen extends StatelessWidget {
                   expands: false,
                   decoration: const InputDecoration(
                     labelText: "password",
-                    prefixIcon: Icon(Iconsax.password_check),
+                    prefixIcon: Icon(Icons.password),
                     border: OutlineInputBorder(
                       borderRadius:
                       BorderRadius.all(Radius.circular(16)),

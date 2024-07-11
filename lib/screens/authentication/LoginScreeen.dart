@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:telkom/screens/authentication/ForgotScreen.dart';
-import 'package:telkom/screens/homescreeen/HomeScreen.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:telekom2/screens/authentication/ForgotScreen.dart';
+import 'package:telekom2/screens/homescreeen/HomeScreen.dart';
+
 
 import '../../utils/ColorPath.dart';
 import 'SignUpScreen.dart';
@@ -41,7 +41,7 @@ class LoginScreen extends StatelessWidget {
                       expands: false,
                       decoration: const InputDecoration(
                         labelText: "gmail",
-                        prefixIcon: Icon(Iconsax.user),
+                        prefixIcon: Icon(Icons.email),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(16)),
                         ),
@@ -69,7 +69,7 @@ class LoginScreen extends StatelessWidget {
 
                       decoration: const InputDecoration(
                         labelText: "password",
-                        prefixIcon: Icon(Iconsax.eye_slash),
+                        prefixIcon: Icon(Icons.remove_red_eye),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(16)),
                           borderSide: BorderSide(color: Colorpath.cardColor),

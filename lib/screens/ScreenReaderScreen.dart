@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:telkom/utils/ColorPath.dart';
+import 'package:telekom2/utils/ColorPath.dart';
+
 
 class ScreenReaderScreen extends StatelessWidget {
   const ScreenReaderScreen({super.key});
