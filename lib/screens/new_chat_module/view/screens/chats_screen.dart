@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:telekom2/screens/new_chat_module/constants.dart';
 import 'package:telekom2/screens/new_chat_module/view/screens/search_screen.dart';
 
 import '../../model/user.dart';
@@ -100,6 +101,7 @@ Future.microtask((){
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
+          backgroundColor: mainColor,
           title: const Text('Chats'),
           actions: [
             IconButton(

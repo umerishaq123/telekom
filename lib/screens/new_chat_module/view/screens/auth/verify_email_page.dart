@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:telekom2/screens/homescreeen/HomeScreen.dart';
 import 'package:telekom2/screens/new_chat_module/view/screens/chats_screen.dart';
 
 class VerifyEmailPage extends StatefulWidget {
@@ -69,7 +70,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
 
   @override
   Widget build(BuildContext context) => isEmailVerified
-      ? const ChatsScreen()
+      ? const HomeScreen()
       : Scaffold(
           appBar: AppBar(
             title: const Text('Verify Email'),
