@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:telkom/screens/chats/widgets/ChatScreen.dart';
-import 'package:telkom/screens/chats/widgets/model/ChatItem.dart';
-import 'package:telkom/utils/ImathPaths.dart';
+import 'package:telekom2/screens/chats/widgets/ChatScreen.dart';
+import 'package:telekom2/screens/chats/widgets/model/ChatItem.dart';
+import 'package:telekom2/utils/ImathPaths.dart';
+
 
 class BuddyConnectorScreen extends StatelessWidget {
   const BuddyConnectorScreen({super.key});
@@ -118,9 +118,9 @@ class BuddyConnectorScreen extends StatelessWidget {
           onPressed: () {},
           child: Text(
             'Edits',
-            style: GoogleFonts.inter(
-              textStyle: const TextStyle(color: Colors.black, fontSize: 13),
-            ),
+            // style: GoogleFonts.inter(
+            //   textStyle: const TextStyle(color: Colors.black, fontSize: 13),
+            // ),
           ),
         ),
         title: const Text("Chats"),

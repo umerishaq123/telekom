@@ -1,8 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:telekom2/screens/chats/BuddyConnectorScreen.dart';
 
-import 'package:telkom/screens/chats/BuddyConnectorScreen.dart';
+
 
 class NavigationMenu extends StatelessWidget {
   const NavigationMenu({super.key});

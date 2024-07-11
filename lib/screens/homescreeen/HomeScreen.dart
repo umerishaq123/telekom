@@ -1,11 +1,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:telkom/screens/MapScreen.dart';
-import 'package:telkom/screens/NotesScreen.dart';
-import 'package:telkom/screens/ScreenReaderScreen.dart';
-import 'package:telkom/utils/ColorPath.dart';
-import 'package:telkom/utils/ImathPaths.dart';
+import 'package:telekom2/screens/MapScreen.dart';
+import 'package:telekom2/screens/NotesScreen.dart';
+import 'package:telekom2/screens/ScreenReaderScreen.dart';
+import 'package:telekom2/utils/ColorPath.dart';
+import 'package:telekom2/utils/ImathPaths.dart';
+
 
 import '../../navigations.dart';
 
