@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+import 'package:telekom2/provider/signup_provider.dart';
 import 'package:telekom2/screens/authentication/LoginScreeen.dart';
 
 
@@ -13,11 +15,19 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const GetMaterialApp(
+    return MultiProvider(providers: [
+       ChangeNotifierProvider(create: (_) => AuthProvider()),
+       
+       
+    ],
+    child:     const GetMaterialApp(
+      
 
       home:  LoginScreen(),
+    )
+  
     );
-  }
+ }
 }
 
 //// code is hare

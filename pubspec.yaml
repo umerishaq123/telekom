@@ -37,6 +37,10 @@ dependencies:
   cupertino_icons: ^1.0.6
   get: ^4.6.6
   google_maps_flutter: ^2.7.0
+  http: ^1.2.1
+  fluttertoast: ^8.0.9
+  another_flushbar: ^1.10.29
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:
