@@ -37,6 +37,23 @@ dependencies:
   cupertino_icons: ^1.0.6
   get: ^4.6.6
   google_maps_flutter: ^2.7.0
+  rename: ^3.0.2
+
+  http: any
+  # firebase
+  firebase_core: any
+  firebase_auth: any
+  firebase_storage: any
+  cloud_firestore: any
+  # Date and Time
+  timeago: any
+  # media
+  image_picker: any
+  # state management
+  provider: any
+  email_validator: ^2.1.17
+  # firebase_messaging: ^14.1.4
+  # flutter_local_notifications: ^12.0.4
 
 dev_dependencies:
   flutter_test:
@@ -61,9 +78,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
