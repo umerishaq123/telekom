@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:telekom2/utils/ColorPath.dart';
 
 import '../homescreeen/HomeScreen.dart';
@@ -143,7 +141,13 @@ class SignUpScreen extends StatelessWidget {
                   height: 40,
                   decoration: const BoxDecoration(),
                   child: ElevatedButton(
-                      onPressed: () => Get.to(HomeScreen()),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HomeScreen(),
+                            ));
+                      },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colorpath.cardColor,
                           shape: RoundedRectangleBorder(

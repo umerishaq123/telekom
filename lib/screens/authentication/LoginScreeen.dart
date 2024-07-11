@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+
 import 'package:telekom2/screens/authentication/ForgotScreen.dart';
 import 'package:telekom2/screens/homescreeen/HomeScreen.dart';
 
@@ -91,7 +90,13 @@ class LoginScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.topRight,
                   child: TextButton(
-                      onPressed: () => Get.to(ForgotScreen()),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ForgotScreen(),
+                            ));
+                      },
                       child: const Text(
                         "Forgot Password",
                         style: TextStyle(
@@ -109,7 +114,14 @@ class LoginScreen extends StatelessWidget {
                   height: 40,
                   decoration: const BoxDecoration(),
                   child: ElevatedButton(
-                      onPressed: () => Get.to(HomeScreen()),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const HomeScreen(),
+                            ));
+                      },
+                      //Get.to(HomeScreen()),
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colorpath.cardColor,
                           shape: RoundedRectangleBorder(
@@ -132,7 +144,11 @@ class LoginScreen extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {
-                        Get.to(SignUpScreen());
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const SignUpScreen(),
+                            ));
                       },
                       style: ButtonStyle(
                         padding: MaterialStateProperty.all(EdgeInsets.zero),

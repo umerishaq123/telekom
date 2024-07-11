@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+
 
 import '../../utils/ColorPath.dart';
 
@@ -16,7 +15,12 @@ class ResetPassword extends StatelessWidget {
         automaticallyImplyLeading: false,
         actions: [
 
-          IconButton(onPressed: ()=>Get.back(), icon: const Icon(CupertinoIcons.clear))
+          IconButton(onPressed: (){
+            Navigator.pop(context);
+          },
+          // Get.back(), 
+          icon: const Icon(CupertinoIcons.clear)
+          )
         ],
       ),
       body:  SingleChildScrollView(

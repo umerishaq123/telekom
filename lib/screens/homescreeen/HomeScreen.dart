@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:telekom2/screens/MapScreen.dart';
 import 'package:telekom2/screens/NotesScreen.dart';
 import 'package:telekom2/screens/ScreenReaderScreen.dart';
@@ -85,7 +84,13 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () => Get.to(const MapScreen()),
+                  onTap: () {
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //       builder: (context) => const MapScreen(),
+                    //     ));
+                  },
                   child: Container(
                     margin:
                         const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
@@ -186,7 +191,13 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               GestureDetector(
-                onTap: () => Get.to(const NotesScreen()),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const NotesScreen(),
+                      ));
+                },
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 10),
                   width: 140,

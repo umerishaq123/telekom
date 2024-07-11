@@ -1,8 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-
 
 import '../../utils/ColorPath.dart';
 import 'ResetPassword.dart';
@@ -17,8 +14,8 @@ class ForgotScreen extends StatelessWidget {
         automaticallyImplyLeading: true,
       ),
       body: Container(
-        margin: const EdgeInsets.symmetric(vertical:  15 ,horizontal: 15),
-        child:  Column(
+        margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -43,44 +40,49 @@ class ForgotScreen extends StatelessWidget {
                 labelText: "Email",
                 prefixIcon: Icon(Icons.email),
                 border: OutlineInputBorder(
-                  borderRadius:
-                  BorderRadius.all(Radius.circular(16)),
+                  borderRadius: BorderRadius.all(Radius.circular(16)),
                   borderSide: BorderSide(color: Colorpath.cardColor),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderRadius:
-                  BorderRadius.all(Radius.circular(16)),
+                  borderRadius: BorderRadius.all(Radius.circular(16)),
                   borderSide: BorderSide(color: Colorpath.cardColor),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderRadius:
-                  BorderRadius.all(Radius.circular(16)),
+                  borderRadius: BorderRadius.all(Radius.circular(16)),
                   borderSide: BorderSide(
-                      color: Colorpath.cardColor), // Set color of unfocused border
+                      color:
+                          Colorpath.cardColor), // Set color of unfocused border
                 ),
               ),
             ),
 
+            const SizedBox(
+              height: 30,
+            ),
 
-            const SizedBox(height: 30,),
             ///submit button
             Container(
               width: double.infinity,
               height: 40,
               decoration: const BoxDecoration(),
               child: ElevatedButton(
-                  onPressed:  ()=>Get.to(ResetPassword()),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ResetPassword(),
+                        ));
+                  },
+
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colorpath.cardColor,
                       shape: RoundedRectangleBorder(
-                          borderRadius:
-                          BorderRadius.circular(16))),
-                  child:  Text(
+                          borderRadius: BorderRadius.circular(16))),
+                  child: Text(
                     "Submit",
                     style: TextStyle(color: Colors.white),
                   )),
             ),
-
           ],
         ),
       ),
@@ -88,5 +90,4 @@ class ForgotScreen extends StatelessWidget {
   }
 }
 
-class MyAppString {
-}
+class MyAppString {}
