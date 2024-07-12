@@ -7,12 +7,12 @@ class Telecom {
   String? confirmPassword;
 
   Telecom({
-    this.username,
-    this.firstName,
-    this.lastName,
-    this.email,
-    this.password,
-    this.confirmPassword,
+   required this.username,
+   required this.firstName,
+   required this.lastName,
+   required this.email,
+   required this.password,
+   required this.confirmPassword,
   });
 
   factory Telecom.fromJson(Map<String, dynamic> json) => Telecom(
