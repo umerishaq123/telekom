@@ -132,21 +132,32 @@ Future.microtask((){
             ),
           ],
         ),
-        body: Consumer<FirebaseProvider>(
-            builder: (context, value, child) {
-          return ListView.separated(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16),
-            itemCount: value.users.length,
-            separatorBuilder: (context, index) =>
-                const SizedBox(height: 10),
-            physics: const BouncingScrollPhysics(),
-            itemBuilder: (context, index) => value
-                        .users[index].uid !=
-                    FirebaseAuth.instance.currentUser?.uid
-                ? UserItem(user: value.users[index])
-                : const SizedBox(),
-          );
-        }),
-      );
+        body: Stack(
+      children: [
+        // Background image
+        Positioned.fill(
+          child: Image.asset(
+            'assets/backimage.png', // replace with your background image asset
+            fit: BoxFit.cover,
+          ),
+        ),
+        // Chat list
+        Consumer<FirebaseProvider>(
+          builder: (context, value, child) {
+            return ListView.separated(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              itemCount: value.users.length,
+              separatorBuilder: (context, index) =>
+              const SizedBox(height: 10),
+              physics: const BouncingScrollPhysics(),
+              itemBuilder: (context, index) => value
+                  .users[index].uid !=
+                  FirebaseAuth.instance.currentUser?.uid
+                  ? UserItem(user: value.users[index])
+                  : const SizedBox(),
+            );
+          },
+        ),
+      ],
+      ));
 }
