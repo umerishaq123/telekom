@@ -32,11 +32,11 @@ class _UserItemState extends State<UserItem> {
           leading: Stack(
             alignment: Alignment.bottomRight,
             children: [
-              // CircleAvatar(
-              //   radius: 30,
-              //   backgroundImage:
-              //       NetworkImage(widget.user.image),
-              // ),
+              CircleAvatar(
+                radius: 30,
+                backgroundImage:
+                    NetworkImage(widget.user.image),
+              ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: CircleAvatar(
