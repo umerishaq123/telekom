@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telekom2/provider/logoutby_provider.dart';
 import 'package:telekom2/provider/session_handling_provider.dart';
 import 'package:telekom2/screens/new_chat_module/view/widgets/login_widget.dart';
@@ -33,6 +35,9 @@ class _TeacherDrawerWidgetState extends State<TeacherDrawerWidget> {
               ),
               onTap: () async {
                 try {
+                  final SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  prefs.setBool('isLogin', false);
                   // Call the logout API
                   await LogoutbyProvider().logout();
 
