@@ -1,172 +1,3 @@
-// // ignore_for_file: unused_import
-// import 'package:email_validator/email_validator.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:flutter/gestures.dart';
-// import 'package:flutter/material.dart';
-// import 'package:telekom2/main.dart';
-
-// import '../../service/firebase_firestore_service.dart';
-// import '../../service/notification_service.dart';
-// import '../screens/auth/forgot_password_page.dart';
-
-// class LoginWidget extends StatefulWidget {
-//   final Function() onClickedSignUp;
-//   const LoginWidget({
-//     Key? key,
-//     required this.onClickedSignUp,
-//   }) : super(key: key);
-
-//   @override
-//   State<LoginWidget> createState() => _LoginWidgetState();
-// }
-
-// class _LoginWidgetState extends State<LoginWidget> {
-//   final formKey = GlobalKey<FormState>();
-//   final emailController = TextEditingController();
-//   final passwordController = TextEditingController();
-//   // static final notifications = NotificationsService();
-
-//   @override
-//   void dispose() {
-//     emailController.dispose();
-//     passwordController.dispose();
-
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) =>
-//       SingleChildScrollView(
-//         padding: const EdgeInsets.all(16),
-//         child: Form(
-//           key: formKey,
-//           child: Column(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: [
-//               const SizedBox(height: 60),
-//               const FlutterLogo(size: 120),
-//               const SizedBox(height: 40),
-//               TextFormField(
-//                 controller: emailController,
-//                 textInputAction: TextInputAction.next,
-//                 decoration: const InputDecoration(
-//                   labelText: 'Email',
-//                   border: OutlineInputBorder(),
-//                 ),
-//                 autovalidateMode:
-//                     AutovalidateMode.onUserInteraction,
-//                 validator: (email) => email != null &&
-//                         !EmailValidator.validate(email)
-//                     ? 'Enter a valid email'
-//                     : null,
-//               ),
-//               const SizedBox(height: 20),
-//               TextFormField(
-//                 controller: passwordController,
-//                 textInputAction: TextInputAction.done,
-//                 decoration: const InputDecoration(
-//                   labelText: 'Password',
-//                   border: OutlineInputBorder(),
-//                 ),
-//                 obscureText: true,
-//                 autovalidateMode:
-//                     AutovalidateMode.onUserInteraction,
-//                 validator: (value) =>
-//                     value != null && value.length < 6
-//                         ? 'Enter min. 6 characters'
-//                         : null,
-//               ),
-//               const SizedBox(height: 20),
-//               ElevatedButton.icon(
-//                 style: ElevatedButton.styleFrom(
-//                   minimumSize: const Size.fromHeight(50),
-//                 ),
-//                 icon: const Icon(Icons.lock_open, size: 32),
-//                 label: const Text(
-//                   'Sign In',
-//                   style: TextStyle(fontSize: 24),
-//                 ),
-//                 onPressed: signIn,
-//               ),
-//               const SizedBox(height: 24),
-//               GestureDetector(
-//                 child: Text(
-//                   'Forgot Password?',
-//                   style: TextStyle(
-//                     decoration: TextDecoration.underline,
-//                     color: Theme.of(context)
-//                         .colorScheme
-//                         .secondary,
-//                     fontSize: 20,
-//                   ),
-//                 ),
-//                 onTap: () => Navigator.of(context)
-//                     .push(MaterialPageRoute(
-//                   builder: (context) =>
-//                       const ForgotPasswordPage(),
-//                 )),
-//               ),
-//               const SizedBox(height: 24),
-//               RichText(
-//                 text: TextSpan(
-//                   style: const TextStyle(
-//                       color: Colors.black, fontSize: 20),
-//                   text: 'No account?  ',
-//                   children: [
-//                     TextSpan(
-//                       recognizer: TapGestureRecognizer()
-//                         ..onTap = widget.onClickedSignUp,
-//                       text: 'Sign Up',
-//                       style: TextStyle(
-//                         decoration:
-//                             TextDecoration.underline,
-//                         color: Theme.of(context)
-//                             .colorScheme
-//                             .secondary,
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       );
-
-//   Future signIn() async {
-//     final isValid = formKey.currentState!.validate();
-//     if (!isValid) return;
-
-//     showDialog(
-//       context: context,
-//       barrierDismissible: false,
-//       builder: (context) =>
-//           const Center(child: CircularProgressIndicator()),
-//     );
-
-//     try {
-//       await FirebaseAuth.instance
-//           .signInWithEmailAndPassword(
-//         email: emailController.text.trim(),
-//         password: passwordController.text.trim(),
-//       );
-
-//       await FirebaseFirestoreService.updateUserData(
-//         {'lastActive': DateTime.now()},
-//       );
-
-//       // await notifications.requestPermission();
-//       // await notifications.getToken();
-//     } on FirebaseAuthException catch (e) {
-//       final snackBar = SnackBar(content: Text(e.message!));
-//       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-//     }
-
-//     navigatorKey.currentState!
-//         .popUntil(((route) => route.isFirst));
-//   }
-
-// }
 
 // ignore_for_file: unused_import
 import 'package:email_validator/email_validator.dart';
@@ -180,6 +11,7 @@ import 'package:telekom2/provider/signup_provider.dart';
 import 'package:telekom2/screens/authentication/ForgotScreen.dart';
 import 'package:telekom2/screens/homescreeen/HomeScreen.dart';
 import 'package:telekom2/screens/new_chat_module/provider/firebase_provider.dart';
+import 'package:telekom2/screens/new_chat_module/view/widgets/signup_widget.dart';
 import 'package:telekom2/utils/ColorPath.dart';
 import '../../service/firebase_firestore_service.dart';
 import '../../service/notification_service.dart';
@@ -196,7 +28,10 @@ class LoginWidget extends StatefulWidget {
 }
 
 class _LoginWidgetState extends State<LoginWidget> {
+    bool isLogin = true;
   final formKey = GlobalKey<FormState>();
+    final usernameController = TextEditingController();
+
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -234,6 +69,33 @@ class _LoginWidgetState extends State<LoginWidget> {
                   ),
                   SizedBox(height: 80),
                   TextFormField(
+                    controller: usernameController,
+                    textInputAction: TextInputAction.next,
+                    decoration: const InputDecoration(
+                      labelText: "username",
+                      prefixIcon: Icon(Icons.email),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                        borderSide: BorderSide(color: Colorpath.cardColor),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                        borderSide: BorderSide(
+                          color: Colorpath.cardColor,
+                        ),
+                      ),
+                    ),
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    // validator: (email) =>
+                    //     email != null && !EmailValidator.validate(email)
+                    //         ? 'Enter a valid email'
+                    //         : null,
+                  ),
+                  const SizedBox(height: 20),
+                  TextFormField(
                     controller: emailController,
                     textInputAction: TextInputAction.next,
                     decoration: const InputDecoration(
@@ -263,7 +125,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                   TextFormField(
                     controller: passwordController,
                     textInputAction: TextInputAction.done,
-                    obscureText: true,
+                    // obscureText: true,
                     decoration: const InputDecoration(
                       labelText: "Password",
                       prefixIcon: Icon(Icons.lock),
@@ -332,9 +194,17 @@ class _LoginWidgetState extends State<LoginWidget> {
                         style: ButtonStyle(
                           padding: MaterialStateProperty.all(EdgeInsets.zero),
                         ),
-                        child: const Text(
-                          "Sign up",
-                          style: TextStyle(color: Colorpath.cardColor),
+                        child: InkWell(
+                          onTap:(){
+                            Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => SignUpWidget(onClickedSignIn:toggle )),
+      );
+                          } ,
+                          child: const Text(
+                            "Sign up",
+                            style: TextStyle(color: Colorpath.cardColor),
+                          ),
                         ),
                       ),
                     ],
@@ -348,37 +218,130 @@ class _LoginWidgetState extends State<LoginWidget> {
     );
   }
 
-  Future signIn() async {
+  Future<void> signIn() async {
     final isValid = formKey.currentState!.validate();
     if (!isValid) return;
 
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Center(child: CircularProgressIndicator()),
-    );
-
+    // Call your API using Provider
+    final loginProvider = Provider.of<FirebaseProvider>(context, listen: false);
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      final apiResponse = await loginProvider.loginApi(
+        usernameController.text.trim(),
+        passwordController.text.trim(),
+        context
+      );
+       
+ 
+     
+
+      // Continue with Firebase sign-in
+      // showDialog(
+      //   context: context,
+      //   barrierDismissible: false,
+      //   builder: (context) => const Center(child: CircularProgressIndicator()),
+      // );
+
+      final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
 
-      await FirebaseFirestoreService.updateUserData(
-        {'lastActive': DateTime.now()},
-      );
-      final login = Provider.of<FirebaseProvider>(context, listen: false);
-      await login.loginApi(
-        emailController.text.trim(),
-        passwordController.text.trim(),
-      );
+      // Successfully signed in with Firebase
+      await FirebaseFirestoreService.updateUserData({
+        'lastActive': DateTime.now(),
+      });
 
-      Get.to(HomeScreen());
-    } on FirebaseAuthException catch (e) {
-      final snackBar = SnackBar(content: Text(e.message!));
+      // Navigate to HomeScreen
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => HomeScreen()),
+      // );
+
+    } on FirebaseAuthException catch (firebaseError) {
+      // Handle FirebaseAuthException
+      final snackBar = SnackBar(content: Text('Firebase login failed: $firebaseError'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } catch (apiError) {
+      // Handle API error
+      final snackBar = SnackBar(content: Text('API login failed: $apiError'));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } finally {
+      // Close progress indicator dialog
+      // Navigator.of(context).popUntil((route) => route.isFirst);
     }
-
-    navigatorKey.currentState!.popUntil(((route) => route.isFirst));
   }
+   void toggle() => setState(() => isLogin = !isLogin);
+
+  // Future<void> signIn() async {
+  //   final isValid = formKey.currentState!.validate();
+  //   if (!isValid) return;
+
+  //   // Call your API using Provider
+  //   final loginProvider = Provider.of<FirebaseProvider>(context, listen: false);
+  //   await loginProvider.loginApi(
+  //     usernameController.text.trim(),
+  //     passwordController.text.trim(),
+  //   ).then((apiResponse) {
+  //     // Handle API response as needed
+  //     // print('API Response: $apiResponse');
+
+  //     // Continue with Firebase sign-in
+  //     showDialog(
+  //       context: context,
+  //       barrierDismissible: false,
+  //       builder: (context) => const Center(child: CircularProgressIndicator()),
+  //     );
+
+  //     FirebaseAuth.instance.signInWithEmailAndPassword(
+  //       email: emailController.text.trim(),
+  //       password: passwordController.text.trim(),
+  //     ).then((userCredential) async {
+  //       // Successfully signed in with Firebase
+  //       await FirebaseFirestoreService.updateUserData({
+  //         'lastActive': DateTime.now(),
+  //       });
+
+  //       // Navigate to HomeScreen
+  //       Navigator.pushReplacement(
+  //         context,
+  //         MaterialPageRoute(builder: (context) => HomeScreen()),
+  //       );
+  //     }).catchError((e) {
+  //       // Handle FirebaseAuthException
+  //       final snackBar = SnackBar(content: Text(e.toString()));
+  //       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  //     }).whenComplete(() {
+  //       // Close progress indicator dialog
+  //       Navigator.of(context).popUntil((route) => route.isFirst);
+  //     });
+  //   }).catchError((e) {
+  //     // Handle API error
+  //     final snackBar = SnackBar(content: Text('API login failed: $e'));
+  //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  //   });
+  // }
+
+  // @override
+  
+
+//     try {
+//       await FirebaseAuth.instance.signInWithEmailAndPassword(
+//         email: emailController.text.trim(),
+//         password: passwordController.text.trim(),
+//       );
+
+//       await FirebaseFirestoreService.updateUserData(
+//         {'lastActive': DateTime.now()},
+//       );
+      
+
+//       Get.to(HomeScreen());
+//     } on FirebaseAuthException catch (e) {
+//       final snackBar = SnackBar(content: Text(e.message!));
+//       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+//     }
+
+//     navigatorKey.currentState!.popUntil(((route) => route.isFirst));
+//   }
+
 }

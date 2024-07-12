@@ -1,4 +1,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
+       <!-- for greater then andriod 13 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+   <uses-permission android:name="android.permission.INTERNET" />
+
+   <queries>
+  <intent>
+    <action android:name="android.intent.action.TTS_SERVICE" />
+  </intent>
+</queries>
+
     <application
         android:label="Telekom"
         android:name="${applicationName}"

@@ -225,9 +225,11 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:telekom2/screens/homescreeen/HomeScreen.dart';
 import 'package:telekom2/screens/new_chat_module/provider/firebase_provider.dart';
 import 'package:telekom2/screens/new_chat_module/service/firebase_firestore_service.dart';
+import 'package:telekom2/screens/new_chat_module/view/widgets/login_widget.dart';
 import 'package:telekom2/utils/ColorPath.dart';
 import 'package:telekom2/provider/signup_provider.dart';
 import 'package:provider/provider.dart';
@@ -244,6 +246,7 @@ class SignUpWidget extends StatefulWidget {
 }
 
 class _SignUpWidgetState extends State<SignUpWidget> {
+    bool isLogin = true;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
@@ -252,6 +255,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
+      
 
   @override
   Widget build(BuildContext context) {
@@ -365,7 +369,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
     );
   }
 
-  Future<void> _signUp() async {
+ Future<void> _signUp() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -377,92 +381,105 @@ class _SignUpWidgetState extends State<SignUpWidget> {
     final password = _passwordController.text.trim();
     final confirmPassword = _confirmPasswordController.text.trim();
 
-    // Display a progress indicator dialog
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => Center(child: CircularProgressIndicator()),
-    );
-
+    // API call to register user
     try {
-      // Create user in Firebase Authentication
-      final userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final apiService = FirebaseProvider(); // Initialize your API service
+      final apiResponse = await apiService.registerApi(
+        username: username,
+        firstName: firstName,
+        lastName: lastName,
         email: email,
         password: password,
+        confirmPassword: confirmPassword,
       );
 
-      // Upload profile image (if needed, uncomment and modify as per your requirement)
-      // final image = await FirebaseStorageService.uploadImage(
-      //   file!,
-      //   'image/profile/${userCredential.user!.uid}',
-      // );
+      // Check API response and handle accordingly
+    
+        // Display a progress indicator dialog
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => Center(child: CircularProgressIndicator()),
+        );
 
-      // Create user profile in Firestore (replace with your Firestore service method)
-      await FirebaseFirestoreService.createUser(
-        // image: image,
-        email: userCredential.user!.email!,
-        uid: userCredential.user!.uid,
-         username: username,
-          firstname: firstName,
-        lastname: lastName, 
-        password: password, 
-        confirmpassword: confirmPassword,
-        // Use username or other names as needed
-      );
+        try {
+          // Create user in Firebase Authentication
+          final userCredential =
+              await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: email,
+            password: password,
+          );
 
-      // Handle API call (replace with your API service method)
-      final provider = Provider.of<FirebaseProvider>(context, listen: false);
-      await provider.registerApi(
-        username,
-        firstName,
-        lastName,
-        email,
-        password,
-        confirmPassword,
-      );
+          // Create user profile in Firestore
+          await FirebaseFirestoreService.createUser(
+            // image: image,
+            email: userCredential.user!.email!,
+            uid: userCredential.user!.uid,
+            username: username,
+            firstname: firstName,
+            lastname: lastName,
+            password: password,
+            confirmpassword: confirmPassword,
+          );
 
-      // Clear form fields
-      _usernameController.clear();
-      _firstNameController.clear();
-      _lastNameController.clear();
-      _emailController.clear();
-      _passwordController.clear();
-      _confirmPasswordController.clear();
+          // Clear form fields
+          _usernameController.clear();
+          _firstNameController.clear();
+          _lastNameController.clear();
+          _emailController.clear();
+          _passwordController.clear();
+          _confirmPasswordController.clear();
 
-      // Close progress indicator dialog
-      Navigator.of(context).pop();
+          // Close progress indicator dialog
+          Navigator.of(context).pop();
 
-      // Navigate to HomeScreen or any other screen upon successful registration
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-      );
-    } on FirebaseAuthException catch (e) {
-      // Handle FirebaseAuthException (e.g., invalid email, weak password)
-      // Show error message to the user
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.message!),
-        ),
-      );
+          // Navigate to HomeScreen or any other screen upon successful registration
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => LoginWidget(onClickedSignUp: toggle,)),
+          );
+        } on FirebaseAuthException catch (e) {
+          // Handle FirebaseAuthException (e.g., invalid email, weak password)
+          // Show error message to the user
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(e.message!),
+            ),
+          );
 
-      // Close progress indicator dialog
-      Navigator.of(context).pop();
+          // Close progress indicator dialog
+          Navigator.of(context).pop();
+        } catch (e) {
+          // Handle other exceptions (e.g., network issues, server errors)
+          // Show generic error message to the user
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Registration sucessfully..'),
+            ),
+          );
+
+          // Close progress indicator dialog
+          Navigator.of(context).pop();
+        }
+     
+        // Handle API registration failure
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('API registration sucessfully. .'),
+          ),
+        );
+      
     } catch (e) {
-      // Handle other exceptions (e.g., network issues, server errors)
-      // Show generic error message to the user
+      // Handle API call exceptions
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Registration failed. Please try again.'),
+          content: Text('API call failed. Please try again.'),
         ),
       );
-
-      // Close progress indicator dialog
-      Navigator.of(context).pop();
     }
   }
-
+   void toggle() => setState(() => isLogin = !isLogin);
+ 
   // Future<void> _signUp() async {
   //   if (!_formKey.currentState!.validate()) {
   //     return;

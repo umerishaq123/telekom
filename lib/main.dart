@@ -36,12 +36,14 @@
 
 // //// code is hare
 
-
 // import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:telekom2/provider/image_to_text.dart';
+import 'package:telekom2/provider/list_of_lecture_provider.dart';
+import 'package:telekom2/provider/session_handling_provider.dart';
 import 'package:telekom2/provider/signup_provider.dart';
 
 import 'firebase_options.dart';
@@ -67,11 +69,12 @@ class MyApp extends StatelessWidget {
   get mainColor => null;
 
   @override
-  Widget build(BuildContext context) =>
-      MultiProvider(
+  Widget build(BuildContext context) => MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => FirebaseProvider()),
-        
+          ChangeNotifierProvider(create: (_) => SessionHandlingViewModel()),
+          ChangeNotifierProvider(create: (_) => NotesProvider()),
+           ChangeNotifierProvider(create: (_) => ImageToTextProvider()),
         ],
         child: MaterialApp(
           navigatorKey: navigatorKey,
@@ -107,12 +110,10 @@ class MainPage extends StatelessWidget {
         body: StreamBuilder<User?>(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return const VerifyEmailPage();
-            } else {
-              return const AuthPage();
-            }
+            return const AuthPage();
           },
         ),
       );
 }
+
+///// new one

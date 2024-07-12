@@ -9,15 +9,40 @@ import 'package:telekom2/utils/drawer.dart';
 
 
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+   
   @override
   Widget build(BuildContext context) {
     // double screenWidth = MediaQuery.of(context).size.width;
 final height = MediaQuery.of(context).size.height;
     return Scaffold(
-      drawer: TeacherDrawerWidget(height: height,),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+        title: const Text(
+          'Home',
+          style: TextStyle(fontSize: 25),
+        ),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ),
+      ),
+      drawer: TeacherDrawerWidget(height: height),
       body: Column(
         children: [
           const SizedBox(
