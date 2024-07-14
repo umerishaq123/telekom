@@ -66,7 +66,8 @@ class _ChatsScreenState extends State<ChatsScreen> with WidgetsBindingObserver {
                 Navigator.pop(context);
               },
               icon: Icon(Icons.arrow_back)),
-          backgroundColor: mainColor,
+          // backgroundColor: mainColor,
+          backgroundColor: Colors.white,
           title: const Text('Chats'),
           actions: [
             IconButton(

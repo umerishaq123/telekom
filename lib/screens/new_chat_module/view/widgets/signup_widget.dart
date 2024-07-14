@@ -225,10 +225,13 @@
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telekom2/main.dart';
 import 'package:telekom2/screens/new_chat_module/provider/firebase_provider.dart';
 import 'package:telekom2/screens/new_chat_module/service/firebase_firestore_service.dart';
+import 'package:telekom2/screens/new_chat_module/view/widgets/login_widget.dart';
 import 'package:telekom2/utils/ColorPath.dart';
 
 class SignUpWidget extends StatefulWidget {
@@ -252,9 +255,14 @@ class _SignUpWidgetState extends State<SignUpWidget> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
+  bool _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
+    ValueNotifier<bool> obscureText = ValueNotifier(true);
+
+    final registerProvider =
+        Provider.of<FirebaseProvider>(context, listen: false);
     return Scaffold(
       body: SingleChildScrollView(
         child: Form(
@@ -318,45 +326,90 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
+                  obscureText: _obscureText,
                   controller: _passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: "Password",
                     prefixIcon: Icon(Icons.lock),
                     border: OutlineInputBorder(),
+                    suffixIcon: InkWell(
+                      onTap: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
+                      child: Icon(
+                        _obscureText
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility,
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
-                  validator: (value) => value!.length < 6
-                      ? 'Password must be at least 6 characters'
-                      : null,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a password';
+                    } else if (value.length < 6) {
+                      return 'Password must be at least 6 characters';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _confirmPasswordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
+                  obscureText: _obscureText,
+                  decoration: InputDecoration(
                     labelText: "Confirm Password",
                     prefixIcon: Icon(Icons.lock),
                     border: OutlineInputBorder(),
+                    suffixIcon: InkWell(
+                      onTap: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
+                      child: Icon(
+                        _obscureText
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility,
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
                   validator: (value) => value != _passwordController.text
                       ? 'Passwords do not match'
                       : null,
                 ),
                 const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: _signUp,
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(50),
-                    backgroundColor: Colorpath.cardColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                  child: const Text(
-                    "Sign Up",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
+                Builder(builder: (context) {
+                  return Consumer<FirebaseProvider>(
+                    builder: (BuildContext context, value, Widget? child) {
+                      return ElevatedButton(
+                              onPressed:value.isLoading? null: _signUp,
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: const Size.fromHeight(50),
+                                backgroundColor: Colorpath.cardColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                              ),
+                              child:  Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  if (!value.isLoading)
+                                    const Text(
+                                      "Log In",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  if (value.isLoading)
+                                    (CircularProgressIndicator())
+                                ],
+                              ),
+                            );
+                    },
+                  );
+                }),
               ],
             ),
           ),
@@ -366,9 +419,11 @@ class _SignUpWidgetState extends State<SignUpWidget> {
   }
 
   Future<void> _signUp() async {
+
     if (!_formKey.currentState!.validate()) {
       return;
     }
+    
 
     final username = _usernameController.text.trim();
     final firstName = _firstNameController.text.trim();
@@ -379,7 +434,6 @@ class _SignUpWidgetState extends State<SignUpWidget> {
 
     // API call to register user
     try {
-
       final apiService = FirebaseProvider(); // Initialize your API service
 
       // Check API response and handle accordingly
@@ -414,7 +468,6 @@ class _SignUpWidgetState extends State<SignUpWidget> {
             password: password,
             confirmpassword: confirmPassword,
           );
-
         });
 
         // Clear form fields
@@ -425,29 +478,38 @@ class _SignUpWidgetState extends State<SignUpWidget> {
         _passwordController.clear();
         _confirmPasswordController.clear();
         Navigator.pop(context);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => LoginWidget(
+                    onClickedSignUp: toggle,
+                  )),
+        );
       } catch (e) {
         // Handle other exceptions (e.g., network issues, server errors)
         // Show generic error message to the user
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Registration sucessfully..'),
-          ),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(
+        //     content: Text('Registration sucessfully..'),
+        //   ),
+        // );
+        print("::: the error is :${e.toString()}");
       }
 
+
       // Handle API registration failure
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('API registration sucessfully. .'),
-        ),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     content: Text('API registration sucessfully. .'),
+      //   ),
+      // );
     } catch (e) {
       // Handle API call exceptions
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('API call failed. Please try again.'),
-        ),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     content: Text('API call failed. Please try again.'),
+      //   ),
+      // );
     }
   }
 

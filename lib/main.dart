@@ -45,6 +45,7 @@ import 'package:telekom2/provider/image_to_text.dart';
 import 'package:telekom2/provider/list_of_lecture_provider.dart';
 import 'package:telekom2/provider/session_handling_provider.dart';
 import 'package:telekom2/screens/homescreeen/HomeScreen.dart';
+import 'package:telekom2/screens/new_chat_module/view/screens/auth/splash.dart';
 
 import 'firebase_options.dart';
 import 'screens/new_chat_module/provider/firebase_provider.dart';
@@ -106,7 +107,8 @@ class MyApp extends StatelessWidget {
               ),
             ),
           ),
-          home: isLogin ? HomeScreen() : AuthPage(),
+          // home: isLogin ? HomeScreen() : AuthPage(),
+          home: SplasScreen(),
         ),
       );
 }

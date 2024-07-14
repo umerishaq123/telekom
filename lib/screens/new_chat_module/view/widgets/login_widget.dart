@@ -12,6 +12,7 @@ import 'package:telekom2/screens/homescreeen/HomeScreen.dart';
 import 'package:telekom2/screens/new_chat_module/provider/firebase_provider.dart';
 import 'package:telekom2/screens/new_chat_module/view/widgets/signup_widget.dart';
 import 'package:telekom2/utils/ColorPath.dart';
+import 'package:telekom2/utils/utils.dart';
 import '../../service/firebase_firestore_service.dart';
 import '../../service/notification_service.dart';
 
@@ -33,6 +34,7 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool _obscureText = true;
 
   @override
   void dispose() {
@@ -125,11 +127,25 @@ class _LoginWidgetState extends State<LoginWidget> {
                     controller: passwordController,
                     textInputAction: TextInputAction.done,
                     // obscureText: true,
-                    decoration: const InputDecoration(
+                    obscureText: _obscureText,
+                    decoration: InputDecoration(
                       labelText: "Password",
                       prefixIcon: Icon(Icons.lock),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(16)),
+                      ),
+                      suffixIcon: InkWell(
+                        onTap: () {
+                          setState(() {
+                            _obscureText = !_obscureText;
+                          });
+                        },
+                        child: Icon(
+                          _obscureText
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility,
+                          color: Colors.black,
+                        ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(16)),
@@ -167,19 +183,36 @@ class _LoginWidgetState extends State<LoginWidget> {
                     width: 300,
                     height: 40,
                     decoration: const BoxDecoration(),
-                    child: ElevatedButton(
-                      onPressed: signIn,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colorpath.cardColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                      ),
-                      child: Text(
-                        "Log In",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
+                    child: Builder(builder: (context) {
+                      return Builder(builder: (context) {
+                        return Consumer<FirebaseProvider>(
+                          builder:
+                              (BuildContext context, value, Widget? child) {
+                            return ElevatedButton(
+                              onPressed: value.isLoading ? null : signIn,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colorpath.cardColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                              ),
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  if (!value.isLoading)
+                                    const Text(
+                                      "Log In",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  if (value.isLoading)
+                                    (CircularProgressIndicator())
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      });
+                    }),
                   ),
                   SizedBox(height: 40),
                   Row(
@@ -221,6 +254,7 @@ class _LoginWidgetState extends State<LoginWidget> {
   }
 
   Future<void> signIn() async {
+    Utils.dismissKeyboard(context);
     final isValid = formKey.currentState!.validate();
     if (!isValid) return;
 

@@ -15,6 +15,14 @@ import '../service/firebase_firestore_service.dart';
 import 'package:http/http.dart' as http;
 
 class FirebaseProvider extends ChangeNotifier {
+   bool _isLoading = false;
+
+  bool get isLoading => _isLoading;
+
+  setLoadingState(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
   ScrollController scrollController = ScrollController();
 
   List<UserModel> users = [];
@@ -89,15 +97,18 @@ class FirebaseProvider extends ChangeNotifier {
   }
 
 
-
-
+ 
 
   ///auth
   Future<void> registerApi({required String username,required String firstName,required String lastName,
-     required String email,required String password,required String confirmPassword}) async {
+     required String email,required String password,required String confirmPassword,}) async {
+        setLoadingState(true);
+      notifyListeners();
     String apiUrl = Apiurl.signup; // Replace with your API endpoint
 
     try {
+       _isLoading = true;
+      notifyListeners();
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -120,6 +131,7 @@ class FirebaseProvider extends ChangeNotifier {
         // Successfully registered
         Utils.toastMessage('Registration successful');
         print('Registration successful');
+       
       } else {
         // Registration failed
         Utils.toastMessage('Registration failed: ${response.body}');
@@ -129,6 +141,11 @@ class FirebaseProvider extends ChangeNotifier {
       // Exception occurred during registration
       Utils.toastMessage('Registration failed: $e');
       print('Registration failed: $e');
+        _isLoading = false;
+      notifyListeners();
+    }finally {
+      setLoadingState(false);
+      notifyListeners();
     }
   }
 
@@ -140,6 +157,8 @@ class FirebaseProvider extends ChangeNotifier {
     String apiUrl = Apiurl.login; // Replace with your login API endpoint
 
     try {
+        setLoadingState(true);
+      notifyListeners();
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -178,6 +197,8 @@ Navigator.pushReplacement(
       // Exception occurred during login
       Utils.toastMessage('Login failed: $e');
       print('Login failed: $e');
+    }finally {
+      setLoadingState(false);
     }
   }
 }

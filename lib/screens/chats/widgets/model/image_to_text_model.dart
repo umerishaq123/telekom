@@ -4,22 +4,22 @@
 
 import 'dart:convert';
 
-Imagetotext imagetotextFromJson(String str) => Imagetotext.fromJson(json.decode(str));
+ImagetotextModel imagetotextFromJson(String str) => ImagetotextModel.fromJson(json.decode(str));
 
-String imagetotextToJson(Imagetotext data) => json.encode(data.toJson());
+String imagetotextToJson(ImagetotextModel data) => json.encode(data.toJson());
 
-class Imagetotext {
+class ImagetotextModel {
     String? extractedText;
     String? imageUrl;
     String? textUrl;
 
-    Imagetotext({
+    ImagetotextModel({
         this.extractedText,
         this.imageUrl,
         this.textUrl,
     });
 
-    factory Imagetotext.fromJson(Map<String, dynamic> json) => Imagetotext(
+    factory ImagetotextModel.fromJson(Map<String, dynamic> json) => ImagetotextModel(
         extractedText: json["extracted_text"],
         imageUrl: json["image_url"],
         textUrl: json["text_url"],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:telekom2/utils/ColorPath.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import '../../constants.dart';
 import '../../model/message.dart';
@@ -18,20 +19,21 @@ class MessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Align(
         alignment:
-            isMe ? Alignment.topLeft : Alignment.topRight,
+            isMe ? Alignment.topRight : Alignment.topLeft,
         child: Container(
           decoration: BoxDecoration(
-            color: isMe ? mainColor : Colors.grey,
+            color: isMe ? Colorpath.buttonColor : Color(0XffD9D9D9),
             borderRadius: isMe
                 ? const BorderRadius.only(
-                    topRight: Radius.circular(30),
-                    bottomRight: Radius.circular(30),
-                    topLeft: Radius.circular(30),
+                    // topRight: Radius.circular(30),
+                    bottomRight: Radius.circular(10),
+                    bottomLeft: Radius.circular(10),
+                    topLeft: Radius.circular(10),
                   )
                 : const BorderRadius.only(
-                    topRight: Radius.circular(30),
-                    bottomLeft: Radius.circular(30),
-                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(10),
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
                   ),
           ),
           margin: const EdgeInsets.only(
@@ -59,12 +61,12 @@ class MessageBubble extends StatelessWidget {
                     )
                   : Text(message.content,
                       style: const TextStyle(
-                          color: Colors.white)),
+                          color: Colors.black)),
               const SizedBox(height: 5),
               Text(
                 timeago.format(message.sentTime),
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                   fontSize: 10,
                 ),
               ),

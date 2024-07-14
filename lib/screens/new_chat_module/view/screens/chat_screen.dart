@@ -26,12 +26,18 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: Container(
+        
         child: Column(
+        
           children: [
+            
             ChatMessages(receiverId: widget.userId),
-            ChatTextField(receiverId: widget.userId)
+            SizedBox(height: MediaQuery.of(context).size.height*0.01,),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ChatTextField(receiverId: widget.userId),
+            )
           ],
         ),
       ),
@@ -39,6 +45,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   AppBar _buildAppBar() => AppBar(
+    
       elevation: 0,
       foregroundColor: Colors.black,
       backgroundColor: Colors.transparent,

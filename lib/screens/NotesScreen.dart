@@ -113,7 +113,7 @@
 //   @override
 //   void dispose() {
 //     // Clear session when disposing the screen
-   
+
 //     super.dispose();
 //   }
 // }
@@ -127,6 +127,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:telekom2/provider/list_of_lecture_provider.dart';
 import 'package:telekom2/screens/new_chat_module/model/list_of_lectures.model.dart';
+import 'package:telekom2/screens/new_chat_module/view/screens/detail_notes/audio_detail.dart';
+import 'package:telekom2/screens/new_chat_module/view/screens/detail_notes/pdf_deatil.dart';
 
 class NotesScreen extends StatefulWidget {
   const NotesScreen({Key? key}) : super(key: key);
@@ -145,63 +147,63 @@ class _NotesScreenState extends State<NotesScreen> {
         Provider.of<NotesProvider>(context, listen: false).fetchApiData();
   }
 
-Future<void> _downloadFile(String? downloadUrl, String fileName) async {
-  if (downloadUrl == null) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Download URL is null'),
-      ),
-    );
-    return;
-  }
-
-  try {
-    final response = await http.get(Uri.parse(downloadUrl));
-
-    if (response.statusCode == 200) {
-      final bytes = response.bodyBytes;
-
-      // Get the device's download directory using path_provider
-      final directory = await getExternalStorageDirectory();
-      if (directory == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Could not access device storage'),
-          ),
-        );
-        return;
-      }
-
-      // Create a File instance and save the file
-      final filePath = '${directory.path}/$fileName';
-      final file = File(filePath);
-      await file.writeAsBytes(bytes);
-
-      // Show a toast or message indicating successful download
+  Future<void> _downloadFile(String? downloadUrl, String fileName) async {
+    if (downloadUrl == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('File downloaded successfully'),
+          content: Text('Download URL is null'),
         ),
       );
-    } else {
-      // Handle other status codes
-      print('Download failed: ${response.statusCode}');
+      return;
+    }
+
+    try {
+      final response = await http.get(Uri.parse(downloadUrl));
+
+      if (response.statusCode == 200) {
+        final bytes = response.bodyBytes;
+
+        // Get the device's download directory using path_provider
+        final directory = await getExternalStorageDirectory();
+        if (directory == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Could not access device storage'),
+            ),
+          );
+          return;
+        }
+
+        // Create a File instance and save the file
+        final filePath = '${directory.path}/$fileName';
+        final file = File(filePath);
+        await file.writeAsBytes(bytes);
+
+        // Show a toast or message indicating successful download
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('File downloaded successfully'),
+          ),
+        );
+      } else {
+        // Handle other status codes
+        print('Download failed: ${response.statusCode}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Download failed: ${response.statusCode}'),
+          ),
+        );
+      }
+    } catch (e) {
+      // Handle network or other errors
+      print('Download error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Download failed: ${response.statusCode}'),
+          content: Text('Download error: $e'),
         ),
       );
     }
-  } catch (e) {
-    // Handle network or other errors
-    print('Download error: $e');
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Download error: $e'),
-      ),
-    );
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -213,15 +215,11 @@ Future<void> _downloadFile(String? downloadUrl, String fileName) async {
           children: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Row(
+              child: const Row(
                 children: [
                   Icon(
                     Icons.arrow_back_ios,
                     color: Colors.black,
-                  ),
-                  Text(
-                    "Back",
-                    style: TextStyle(color: Colors.black),
                   ),
                 ],
               ),
@@ -268,12 +266,40 @@ Future<void> _downloadFile(String? downloadUrl, String fileName) async {
                   child: ListView.builder(
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
+                      final item = snapshot.data![index];
                       return ListTile(
                         onTap: () {
-                          // Handle download when ListTile is tapped
-                          _downloadFile(
-                              snapshot.data![index].fileUrl!,
-                              'lecture_${snapshot.data![index].id}.pdf');
+                          print("::: the pdf url is hare:${snapshot.data?[index].fileUrl}");
+                          if (item.fileUrl!.toLowerCase().endsWith('.pdf')) {
+                            // Navigate to PDF Viewer screen
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PDFViewerScreen(
+                                  pdfUrl: item.fileUrl!,
+                                ),
+                              ),
+                            );
+                          } else if (item.fileUrl!
+                              .toLowerCase()
+                              .endsWith('.mp3')) {
+                            // Navigate to Audio Player screen
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AudioPlayerScreen(
+                                  audioUrl: item.fileUrl!,
+                                ),
+                              ),
+                            );
+                          } else if(item.fileUrl ==null) {
+                            // Handle other file types or show a message
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Unsupported file type'),
+                              ),
+                            );
+                          }
                         },
                         title: Container(
                           color: Colors.red,
@@ -303,4 +329,3 @@ Future<void> _downloadFile(String? downloadUrl, String fileName) async {
     super.dispose();
   }
 }
-
