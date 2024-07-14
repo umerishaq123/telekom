@@ -226,6 +226,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telekom2/main.dart';
@@ -264,6 +265,12 @@ class _SignUpWidgetState extends State<SignUpWidget> {
     final registerProvider =
         Provider.of<FirebaseProvider>(context, listen: false);
     return Scaffold(
+      
+      appBar: AppBar(
+      
+        title:Text('Sign Up now',style: TextStyle(fontSize: 24),),
+      centerTitle: true,),
+      
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -271,16 +278,8 @@ class _SignUpWidgetState extends State<SignUpWidget> {
             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
             child: Column(
               children: [
-                const SizedBox(height: 80),
-                Text(
-                  "Sign Up now",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 18,
-                    color: Colorpath.cardColor,
-                  ),
-                ),
-                const SizedBox(height: 90),
+                
+                const SizedBox(height: 20),
                 TextFormField(
                   controller: _usernameController,
                   decoration: const InputDecoration(

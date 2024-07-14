@@ -48,6 +48,17 @@ class _LoginWidgetState extends State<LoginWidget> {
     final authProviderlogin =
         Provider.of<FirebaseProvider>(context, listen: false);
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Sign In Now',
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            fontSize: 18,
+            color: Colorpath.cardColor,
+          ),
+        ),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         child: Container(
           alignment: Alignment.center,
@@ -59,16 +70,7 @@ class _LoginWidgetState extends State<LoginWidget> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(height: 110),
-                  Text(
-                    "Sign In now",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 18,
-                      color: Colorpath.cardColor,
-                    ),
-                  ),
-                  SizedBox(height: 80),
+                  
                   TextFormField(
                     controller: usernameController,
                     textInputAction: TextInputAction.next,
@@ -178,7 +180,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 60),
+                  SizedBox(height: 5),
                   Container(
                     width: 300,
                     height: 40,
@@ -214,7 +216,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                       });
                     }),
                   ),
-                  SizedBox(height: 40),
+                  SizedBox(height: 5),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

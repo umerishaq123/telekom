@@ -27,7 +27,7 @@ class UserModel {
     return UserModel(
       uid: json['uid'],
       username: json['username'],
-      image: json['image'],
+      image: json['image'] ?? 'https://via.placeholder.com/150',
       firstname: json['firstname'],
       lastname: json['lastname'],
       email: json['email'],

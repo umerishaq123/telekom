@@ -35,6 +35,7 @@ class FirebaseProvider extends ChangeNotifier {
   }
 
   void getAllUsers() {
+    
     print('::: calling all users');
     FirebaseFirestore.instance
         .collection('users')

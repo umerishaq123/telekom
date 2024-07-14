@@ -68,7 +68,8 @@ class _ChatsScreenState extends State<ChatsScreen> with WidgetsBindingObserver {
               icon: Icon(Icons.arrow_back)),
           // backgroundColor: mainColor,
           backgroundColor: Colors.white,
-          title: const Text('Chats'),
+          title: const Text('Chats',style: TextStyle(fontSize: 24),),
+          centerTitle: true,
           actions: [
             IconButton(
               onPressed: () => Navigator.of(context).push(
@@ -79,14 +80,15 @@ class _ChatsScreenState extends State<ChatsScreen> with WidgetsBindingObserver {
         ),
         body: Consumer<FirebaseProvider>(builder: (context, value, child) {
           return ListView.separated(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             itemCount: value.users.length,
-            separatorBuilder: (context, index) => const SizedBox(height: 10),
+             separatorBuilder: (context, index) => const Divider(), 
             physics: const BouncingScrollPhysics(),
             itemBuilder: (context, index) =>
                 value.users[index].uid != GetMeEmail.senderId
                     ? UserItem(user: value.users[index])
                     : const SizedBox(),
+                    
           );
         }),
       );
