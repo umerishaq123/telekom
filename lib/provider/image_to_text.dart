@@ -41,6 +41,8 @@ Future<void> processImage(File image) async {
         ..files.add(await http.MultipartFile.fromPath('image', image.path));
 
       final response = await request.send();
+print(":::: the print status code is :${response.statusCode}");
+// print(":::: the print status code is :${response.}");
 
       if (response.statusCode == 200) {
         final responseData = await response.stream.bytesToString();

@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telekom2/provider/logoutby_provider.dart';
 import 'package:telekom2/provider/session_handling_provider.dart';
 import 'package:telekom2/screens/new_chat_module/view/widgets/login_widget.dart';
+import 'package:telekom2/utils/utils.dart';
 
 class TeacherDrawerWidget extends StatefulWidget {
   const TeacherDrawerWidget({
@@ -34,25 +35,38 @@ class _TeacherDrawerWidgetState extends State<TeacherDrawerWidget> {
                 'Logout',
               ),
               onTap: () async {
-                try {
-                  final SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
-                  prefs.setBool('isLogin', false);
-                  // Call the logout API
-                  await LogoutbyProvider().logout();
+           try {
+                  final sessionHandler = SessionHandlingViewModel();
+                  final token = await sessionHandler.getToken();
+
+                  if (token != null) {
+                    await LogoutbyProvider().logout();
+                  }
+
+                  // Clear user session data
+                  await sessionHandler.removeUser();
 
                   // Navigate to the login screen
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          LoginWidget(onClickedSignUp: toggle),
+                      builder: (context) => LoginWidget(onClickedSignUp: toggle),
                     ),
                   );
                 } catch (e) {
                   print('Logout error: $e');
-                  // Handle logout error
+                  Utils.toastMessage('Logout error: $e');
+
+                  // Ensure user is logged out and session is cleared
+                  await SessionHandlingViewModel().removeUser();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginWidget(onClickedSignUp: toggle),
+                    ),
+                  );
                 }
+              
               }
 
               // onTap:

@@ -7,8 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SessionHandlingViewModel with ChangeNotifier {
-   String? _token;
-  DateTime? _tokenExpiry;
+  
   // Method to save token
   Future<bool> saveToken(var token) async {
     try {
@@ -46,10 +45,11 @@ Future<void> refreshToken() async {
     }
   }
 
-  Future<void> removeUser() async {
-    // Clear session data, including token
-    _token = null;
-    _tokenExpiry = null;
-    // Implement logic to clear any other user-related data
+  
+    Future removeUser() async {
+    final SharedPreferences sp = await SharedPreferences.getInstance();
+    sp.remove('token');
+    notifyListeners();
+    return sp.clear();
   }
 }

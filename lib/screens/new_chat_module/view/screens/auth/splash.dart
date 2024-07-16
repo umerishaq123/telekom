@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:telekom2/provider/session_handling_provider.dart';
 import 'package:telekom2/screens/homescreeen/HomeScreen.dart';
 import 'package:telekom2/screens/new_chat_module/view/screens/auth/auth_page.dart';
 import 'package:telekom2/utils/ColorPath.dart';
@@ -17,13 +18,21 @@ class _SplasScreenState extends State<SplasScreen> {
   void initState() {
     super.initState();
     // Delay navigation by 3 seconds
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(Duration(seconds: 3), () async {
       // Navigate to your desired screen
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => isLogin ? const HomeScreen() : AuthPage()),
-      );
+      final token = await SessionHandlingViewModel().getToken();
+      print("::: the token in splash is :$token");
+      if (token != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => AuthPage()),
+        );
+      }
     });
   }
 

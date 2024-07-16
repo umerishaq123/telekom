@@ -24,8 +24,8 @@ class _ScreenReaderScreenState extends State<ScreenReaderScreen> {
   final ImagePicker _picker = ImagePicker();
   FlutterTts flutterTts = FlutterTts();
   bool isPlaying = false;
- Future<ImagetotextModel>? viewimagetotextinfo;
-   @override
+  Future<ImagetotextModel>? viewimagetotextinfo;
+  @override
   void dispose() {
     // Dispose resources here
     flutterTts.speak('');
@@ -58,7 +58,6 @@ class _ScreenReaderScreenState extends State<ScreenReaderScreen> {
       }
     }
   }
-    
 
   void _showImageSourceDialog() {
     showDialog(
@@ -117,10 +116,10 @@ class _ScreenReaderScreenState extends State<ScreenReaderScreen> {
     final provider = Provider.of<ImageToTextProvider>(context);
 
     return PopScope(
-     onPopInvoked: (bool didPop) {
-      didPop ? _resetState:SizedBox();
-    // Handle the pop. If `didPop` is false, it was blocked.
-  },
+      onPopInvoked: (bool didPop) {
+        didPop ? _resetState : SizedBox();
+        // Handle the pop. If `didPop` is false, it was blocked.
+      },
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -166,18 +165,21 @@ class _ScreenReaderScreenState extends State<ScreenReaderScreen> {
                     return Consumer<ImageToTextProvider>(
                       builder: (BuildContext context, value, Widget? child) {
                         return ElevatedButton(
-                          onPressed:value.isLoading? null : () {
-                            print(":::: the text shown above is :${provider.imageToText!.extractedText!}");
-                            if (provider.imageToText?.extractedText != null) {
-                              String text = provider.imageToText!.extractedText!;
-                              _speak(text);
-                            }
-                          },
+                          onPressed:
+                              provider.isLoading || provider.imageToText == null
+                                  ? null
+                                  : () {
+                                      print(
+                                          ":::: the text shown above is :${provider.imageToText!.extractedText!}");
+                                      String text =
+                                          provider.imageToText!.extractedText!;
+                                      _speak(text);
+                                    },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
                                 Colorpath.buttonColor),
-                            shape:
-                                MaterialStateProperty.all<RoundedRectangleBorder>(
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12.0),
                               ),
@@ -185,18 +187,18 @@ class _ScreenReaderScreenState extends State<ScreenReaderScreen> {
                           ),
                           child: Padding(
                             padding: EdgeInsets.only(top: 13, bottom: 13),
-                            child:  Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    if (!value.isLoading)
-                                      const Text(
-                                        "Convert",
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    if (value.isLoading)
-                                      (CircularProgressIndicator())
-                                  ],
-                                ),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                if (!value.isLoading)
+                                  const Text(
+                                    "Convert",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                if (value.isLoading)
+                                  (CircularProgressIndicator())
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -246,14 +248,14 @@ class _ScreenReaderScreenState extends State<ScreenReaderScreen> {
                     onPressed: () {
                       // _showAlertDialog(context);
                       Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Imagetotext(),
-                        ));
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Imagetotext(),
+                          ));
                     },
                     style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Colorpath.buttonColor),
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          Colorpath.buttonColor),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.0),
@@ -288,7 +290,7 @@ class _ScreenReaderScreenState extends State<ScreenReaderScreen> {
 
 //  void _showAlertDialog(BuildContext context) {
 //     showDialog(
-     
+
 //       context: context,
 //       barrierDismissible: false,
 //       builder: (BuildContext context) {
@@ -329,7 +331,4 @@ class _ScreenReaderScreenState extends State<ScreenReaderScreen> {
   //     throw Exception('Failed to load text from URL: $e');
   //   }
   // }
-
 }
-
-
