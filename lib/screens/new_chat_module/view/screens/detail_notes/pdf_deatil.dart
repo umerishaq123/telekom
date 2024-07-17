@@ -14,7 +14,8 @@ class PDFViewerScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('PDF Viewer'),
+        title: Text('Notes',style: TextStyle(fontSize: 18),),
+        centerTitle: true,
       ),
       body: FutureBuilder<Uint8List>(
         future: _loadPDF(pdfUrl),

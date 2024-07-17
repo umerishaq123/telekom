@@ -60,8 +60,8 @@ class _UserItemState extends State<UserItem> {
             'Last Active : ${timeago.format(widget.user.lastActive)}',
             maxLines: 2,
             style: const TextStyle(
-              color: mainColor,
-              fontSize: 15,
+              color: Colors.black,
+              fontSize: 12,
               overflow: TextOverflow.ellipsis,
             ),
           ),

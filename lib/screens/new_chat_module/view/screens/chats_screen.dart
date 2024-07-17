@@ -70,19 +70,19 @@ class _ChatsScreenState extends State<ChatsScreen> with WidgetsBindingObserver {
           backgroundColor: Colors.white,
           title: const Text('Chats',style: TextStyle(fontSize: 24),),
           centerTitle: true,
-          actions: [
-            IconButton(
-              onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const UsersSearchScreen())),
-              icon: const Icon(Icons.search, color: Colors.black),
-            ),
-          ],
+          // actions: [
+          //   IconButton(
+          //     onPressed: () => Navigator.of(context).push(
+          //         MaterialPageRoute(builder: (_) => const UsersSearchScreen())),
+          //     icon: const Icon(Icons.search, color: Colors.black),
+          //   ),
+          // ],
         ),
         body: Consumer<FirebaseProvider>(builder: (context, value, child) {
           return ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             itemCount: value.users.length,
-             separatorBuilder: (context, index) => const Divider(), 
+             separatorBuilder: (context, index) => Divider(), 
             physics: const BouncingScrollPhysics(),
             itemBuilder: (context, index) =>
                 value.users[index].uid != GetMeEmail.senderId
