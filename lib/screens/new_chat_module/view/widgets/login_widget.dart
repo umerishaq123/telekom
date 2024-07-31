@@ -75,7 +75,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                     controller: usernameController,
                     textInputAction: TextInputAction.next,
                     decoration: const InputDecoration(
-                      labelText: "username",
+                      labelText: "Username",
                       prefixIcon: Icon(Icons.person),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(16)),

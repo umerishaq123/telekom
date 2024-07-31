@@ -125,7 +125,7 @@ class _ScreenReaderScreenState extends State<ScreenReaderScreen> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           title: const Text(
-            "Image to text",
+            "Text Reader",
             style: TextStyle(fontSize: 18),
           ),
           centerTitle: true,
