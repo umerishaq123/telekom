@@ -1,6 +1,4 @@
-////
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
@@ -24,12 +22,14 @@ class _ScreenReaderScreenState extends State<ScreenReaderScreen> {
   final ImagePicker _picker = ImagePicker();
   FlutterTts flutterTts = FlutterTts();
   bool isPlaying = false;
+  bool isProcessing = false;
+  int processingPercentage = 0;
   Future<ImagetotextModel>? viewimagetotextinfo;
-  @override
+
+   @override
   void dispose() {
-    // Dispose resources here
-    flutterTts.speak('');
-    flutterTts.stop(); // Stop any ongoing speech
+    flutterTts.stop();
+    _resetState();
     super.dispose();
   }
 
@@ -46,12 +46,31 @@ class _ScreenReaderScreenState extends State<ScreenReaderScreen> {
 
   Future<void> _processImage() async {
     if (_selectedImage != null) {
+      setState(() {
+        isProcessing = true;
+        processingPercentage = 0;
+      });
+
+      // Simulate image processing and updating progress
+      for (int i = 0; i <= 100; i++) {
+        await Future.delayed(Duration(milliseconds: 50));
+        setState(() {
+          processingPercentage = i;
+        });
+      }
+
       try {
         await Provider.of<ImageToTextProvider>(context, listen: false)
-            .processImage(
-          _selectedImage!,
-        );
+            .processImage(_selectedImage!);
+
+        setState(() {
+          isProcessing = false;
+        });
+
       } catch (error) {
+        setState(() {
+          isProcessing = false;
+        });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error: $error')),
         );
@@ -115,99 +134,61 @@ class _ScreenReaderScreenState extends State<ScreenReaderScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
     final provider = Provider.of<ImageToTextProvider>(context);
 
-    return PopScope(
-      onPopInvoked: (bool didPop) {
-        didPop ? _resetState : SizedBox();
-        // Handle the pop. If `didPop` is false, it was blocked.
-      },
-      child: Scaffold(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          title: const Text(
-            "Text Reader",
-            style: TextStyle(fontSize: 18),
-          ),
-          centerTitle: true,
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.more_vert),
-            )
-          ],
+        title: const Text(
+          "Text Reader",
+          style: TextStyle(fontSize: 18),
         ),
-        body: SingleChildScrollView(
-          child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-            alignment: Alignment.center,
-            child: Column(
-              children: [
-                const SizedBox(height: 30),
-                GestureDetector(
-                  onTap: _showImageSourceDialog,
-                  child: SizedBox(
-                    width: screenWidth * 0.6,
-                    height: screenWidth * 0.6,
-                    child: _selectedImage == null
-                        ? const Image(image: AssetImage("assets/lens.png"))
-                        : Image.file(
-                            _selectedImage!,
-                            fit: BoxFit.cover,
-                          ),
-                  ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.more_vert),
+          )
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+          margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+          alignment: Alignment.center,
+          child: Column(
+            children: [
+              const SizedBox(height: 30),
+              GestureDetector(
+                onTap: _showImageSourceDialog,
+                child: SizedBox(
+                  width: screenWidth * 0.6,
+                  height: screenWidth * 0.6,
+                  child: _selectedImage == null
+                      ? const Image(image: AssetImage("assets/lens.png"))
+                      : Image.file(
+                          _selectedImage!,
+                          fit: BoxFit.cover,
+                        ),
                 ),
-                const SizedBox(
-                  height: 30,
-                ),
+              ),
+              const SizedBox(height: 30),
+              if (isProcessing) ...[
                 SizedBox(
                   width: screenWidth * 0.9,
-                  child: Builder(builder: (context) {
-                    return Consumer<ImageToTextProvider>(
-                      builder: (BuildContext context, value, Widget? child) {
-                        return ElevatedButton(
-                          onPressed:
-                              provider.isLoading || provider.imageToText == null
-                                  ? null
-                                  : () {
-                                      print(
-                                          ":::: the text shown above is :${provider.imageToText!.extractedText!}");
-                                      String text =
-                                          provider.imageToText!.extractedText!;
-                                      _speak(text);
-                                    },
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                Colorpath.buttonColor),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                            ),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 13, bottom: 13),
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                if (!value.isLoading)
-                                  const Text(
-                                    "Convert",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                if (value.isLoading)
-                                  (CircularProgressIndicator())
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  }),
+                  child: Column(
+                    children: [
+                      LinearProgressIndicator(
+                        minHeight: 25,
+                        value: processingPercentage / 100,
+                        backgroundColor: Colors.grey[300],
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            Colorpath.buttonColor2),
+                      ),
+                      const SizedBox(height: 10),
+                      Text('$processingPercentage%'),
+                    ],
+                  ),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+              ] else if (provider.imageToText != null) ...[
                 SizedBox(
                   width: screenWidth * 0.9,
                   child: ElevatedButton(
@@ -230,23 +211,16 @@ class _ScreenReaderScreenState extends State<ScreenReaderScreen> {
                         ),
                       ),
                     ),
-                    child: const Padding(
+                    child:  Padding(
                       padding: EdgeInsets.only(top: 13, bottom: 13),
-                      child: Text(
-                        "Play",
-                        style: TextStyle(color: Colors.black, fontSize: 20),
-                      ),
-                    ),
+                      child:isPlaying? Icon(Icons.pause_circle_outlined,size: 35,):Icon(Icons.play_circle_outline_outlined,size: 35,)),
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 SizedBox(
                   width: screenWidth * 0.9,
                   child: ElevatedButton(
                     onPressed: () {
-                      // _showAlertDialog(context);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -271,64 +245,34 @@ class _ScreenReaderScreenState extends State<ScreenReaderScreen> {
                     ),
                   ),
                 ),
-              ],
-            ),
+              ]
+            ],
           ),
         ),
       ),
     );
   }
 
+  // void _resetState() {
+  //   setState(() {
+  //     _selectedImage = null;
+  //     isPlaying = false;
+  //     // Clear text in provider
+  //     Provider.of<ImageToTextProvider>(context, listen: false).clearText();
+  //   });
+  // }
   void _resetState() {
     setState(() {
       _selectedImage = null;
       isPlaying = false;
-      // Clear text in provider
-      Provider.of<ImageToTextProvider>(context, listen: false).clearText();
+      isProcessing = false;
+      processingPercentage = 0;
+        Provider.of<ImageToTextProvider>(context, listen: false).clearText();
     });
   }
-
-//  void _showAlertDialog(BuildContext context) {
-//     showDialog(
-
-//       context: context,
-//       barrierDismissible: false,
-//       builder: (BuildContext context) {
-//         return AlertDialog(
-//           title: Center(child: Text('Read')),
-//           content: Consumer<ImageToTextProvider>(
-//             builder: (BuildContext context, value, Widget? child) {
-//               if (value.isLoading) {
-//                 return CircularProgressIndicator();
-//               } else {
-//                 final extractedText = value.imageToText?.extractedText ?? 'No text found';
-//                 return Center(child: Text(extractedText));
-//               }
-//             },
-//           ),
-//           actions: [
-//             TextButton(
-//               onPressed: () {
-//                 Navigator.of(context).pop();
-//               },
-//               child: Text('Close'),
-//             ),
-//           ],
-//         );
-//       },
-//     );
-//   }
-
-  // Future<String> _fetchTextFromUrl(String url) async {
-  //   try {
-  //     final response = await http.get(Uri.parse(url));
-  //     if (response.statusCode == 200) {
-  //       return response.body;
-  //     } else {
-  //       throw Exception('Failed to load text from URL');
-  //     }
-  //   } catch (e) {
-  //     throw Exception('Failed to load text from URL: $e');
-  //   }
-  // }
 }
+
+
+
+
+
