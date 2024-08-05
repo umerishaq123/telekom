@@ -48,9 +48,13 @@ final height = MediaQuery.of(context).size.height;
           const SizedBox(
             height: 37,
           ),
-          const Padding(
+          Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Image(image: AssetImage(ImagePaths.women)),
+            // child: Image(image: AssetImage(ImagePaths.women)),
+            child: Container(
+              height: height*0.35,
+              width: double.infinity,
+              child: Center(child: Text('Lorem ipsum dolor sit amet,',style: TextStyle(fontSize: 18),))),
           ),
           const SizedBox(
             height: 20,
@@ -95,7 +99,7 @@ final height = MediaQuery.of(context).size.height;
                               Padding(
                                 padding: EdgeInsets.all(2.0),
                                 child: Text(
-                                  "SCREEN READER",
+                                  "Text Reader",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 14,
@@ -144,7 +148,7 @@ final height = MediaQuery.of(context).size.height;
                               Padding(
                                 padding: EdgeInsets.all(2.0),
                                 child: Text(
-                                  "GEOTAGGING",
+                                  "Indoor Map",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 14,
@@ -203,7 +207,7 @@ final height = MediaQuery.of(context).size.height;
                             Padding(
                               padding: EdgeInsets.all(2.0),
                               child: Text(
-                                "BUDDY CONNECTOR",
+                                "Buddy Friends",
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 14,
@@ -248,7 +252,7 @@ final height = MediaQuery.of(context).size.height;
                             Padding(
                               padding: EdgeInsets.all(2.0),
                               child: Text(
-                                "Voice Notes \nVoice & Braille Code",
+                                "File/Voice Notes",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 14,

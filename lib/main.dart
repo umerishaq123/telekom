@@ -41,6 +41,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:telekom2/chat_modification/create_comunity_screen.dart';
+import 'package:telekom2/group_chat/chat_screens/home/homepage.dart';
 import 'package:telekom2/provider/image_to_text.dart';
 import 'package:telekom2/provider/language_change_comtroller.dart';
 import 'package:telekom2/provider/list_of_lecture_provider.dart';
@@ -49,7 +51,7 @@ import 'package:telekom2/screens/homescreeen/HomeScreen.dart';
 import 'package:telekom2/screens/new_chat_module/view/screens/auth/splash.dart';
 
 import 'firebase_options.dart';
-import 'screens/new_chat_module/provider/firebase_provider.dart';
+import 'provider/firebase_provider.dart';
 import 'screens/new_chat_module/view/screens/auth/auth_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -117,6 +119,7 @@ class _MyAppState extends State<MyApp> {
                   : value.appLocale == null
                       ? Locale(widget.locale)
                       : Provider.of<AppLanguage>(context).appLocale,
+                // locale: value.appLocale,
               localizationsDelegates: [
                 AppLocalizations.delegate,
                 GlobalMaterialLocalizations.delegate,
@@ -147,7 +150,9 @@ class _MyAppState extends State<MyApp> {
                 ),
               ),
               // home: isLogin ? HomeScreen() : AuthPage(),
-              home: SplasScreen(),
+              // home: SplasScreen(),
+              home: HomePage(),
+              
             );
           },
         ),

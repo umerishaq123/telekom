@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'package:audio_session/audio_session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 import 'package:telekom2/provider/image_to_text.dart';
 import 'package:telekom2/screens/chats/widgets/model/image_to_text_model.dart';
@@ -25,11 +27,21 @@ class _ScreenReaderScreenState extends State<ScreenReaderScreen> {
   bool isProcessing = false;
   int processingPercentage = 0;
   Future<ImagetotextModel>? viewimagetotextinfo;
+  late ImageToTextProvider _imageToTextProvider;
+  String? audioFilePath;
+   bool showAudioPlayer = false; 
 
-   @override
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _imageToTextProvider =
+        Provider.of<ImageToTextProvider>(context, listen: false);
+  }
+
+  @override
   void dispose() {
     flutterTts.stop();
-    _resetState();
+    Future.microtask(() => _resetState());
     super.dispose();
   }
 
@@ -66,7 +78,6 @@ class _ScreenReaderScreenState extends State<ScreenReaderScreen> {
         setState(() {
           isProcessing = false;
         });
-
       } catch (error) {
         setState(() {
           isProcessing = false;
@@ -110,11 +121,16 @@ class _ScreenReaderScreenState extends State<ScreenReaderScreen> {
 
   Future<void> _speak(String text) async {
     try {
+        final tempDir = await Directory.systemTemp.createTemp();
+  final tempFile = File('${tempDir.path}/tts_audio.m4a');
       await flutterTts.setLanguage("en-US");
       await flutterTts.setPitch(1.0);
       await flutterTts.setVolume(1.0);
+      await flutterTts.synthesizeToFile(text, tempFile.path);
       setState(() {
         isPlaying = true;
+         showAudioPlayer = true;
+    audioFilePath = tempFile.path;
       });
       await flutterTts.speak(text);
     } catch (e) {
@@ -211,9 +227,9 @@ class _ScreenReaderScreenState extends State<ScreenReaderScreen> {
                         ),
                       ),
                     ),
-                    child:  Padding(
-                      padding: EdgeInsets.only(top: 13, bottom: 13),
-                      child:isPlaying? Icon(Icons.pause_circle_outlined,size: 35,):Icon(Icons.play_circle_outline_outlined,size: 35,)),
+                    child: Padding(
+                        padding: EdgeInsets.only(top: 13, bottom: 13),
+                        child: Text('Play')),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -245,7 +261,11 @@ class _ScreenReaderScreenState extends State<ScreenReaderScreen> {
                     ),
                   ),
                 ),
-              ]
+              ],
+                if (showAudioPlayer && audioFilePath != null) ...[
+                const SizedBox(height: 20),
+                AudioPlayerWidget(audioFilePath: audioFilePath!),
+              ],
             ],
           ),
         ),
@@ -253,26 +273,160 @@ class _ScreenReaderScreenState extends State<ScreenReaderScreen> {
     );
   }
 
-  // void _resetState() {
-  //   setState(() {
-  //     _selectedImage = null;
-  //     isPlaying = false;
-  //     // Clear text in provider
-  //     Provider.of<ImageToTextProvider>(context, listen: false).clearText();
-  //   });
-  // }
   void _resetState() {
     setState(() {
       _selectedImage = null;
       isPlaying = false;
       isProcessing = false;
       processingPercentage = 0;
-        Provider.of<ImageToTextProvider>(context, listen: false).clearText();
+      _imageToTextProvider.clearText();
     });
   }
 }
 
 
+class AudioPlayerWidget extends StatefulWidget {
+  final String audioFilePath;
+  AudioPlayerWidget({required this.audioFilePath, Key? key});
+  @override
+  _AudioPlayerWidgetState createState() => _AudioPlayerWidgetState();
+}
 
+class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
+  final AudioPlayer _audioPlayer = AudioPlayer();
+  bool isPlaying = false;
+  bool showVolumeSlider = false;
+  double currentVolume = 0.5;
+  Duration currentPosition = Duration.zero;
+  Duration totalDuration = Duration.zero;
 
+  @override
+  void initState() {
+    super.initState();
+    _init();
+  }
 
+  Future<void> _init() async {
+    // Request audio focus
+    final session = await AudioSession.instance;
+    await session.configure(AudioSessionConfiguration.music());
+
+    // Listen to changes in playback state
+    _audioPlayer.playerStateStream.listen((state) {
+      setState(() {
+        isPlaying = state.playing;
+      });
+    });
+
+    // Listen to changes in playback position
+    _audioPlayer.positionStream.listen((position) {
+      setState(() {
+        currentPosition = position;
+      });
+    });
+
+    // Listen to changes in the duration of the audio
+    _audioPlayer.durationStream.listen((duration) {
+      setState(() {
+        totalDuration = duration ?? Duration.zero;
+      });
+    });
+
+    // Load the audio source
+    await _audioPlayer.setUrl(widget.audioFilePath);
+  }
+
+  void _playPause() {
+    if (_audioPlayer.playing) {
+      _audioPlayer.pause();
+    } else {
+      _audioPlayer.play();
+    }
+  }
+
+  void _skipForward() {
+    final newPosition = currentPosition + Duration(seconds: 10);
+    _audioPlayer.seek(newPosition);
+  }
+
+  void _setVolume(double value) {
+    setState(() {
+      currentVolume = value;
+      _audioPlayer.setVolume(value);
+    });
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 8),
+        child: Column(
+          children: [
+            
+            // Audio Progress Bar
+            Slider(
+              
+              value: currentPosition.inMilliseconds.toDouble(),
+              onChanged: (double value) {
+                _audioPlayer.seek(Duration(milliseconds: value.toInt()));
+              },
+              min: 0.0,
+              max: totalDuration.inMilliseconds.toDouble(),
+              activeColor: Colors.blue,
+              inactiveColor: Colors.grey,
+            ),
+            // Control Icons
+            Row(
+              children: [
+                IconButton(
+                  icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
+                  onPressed: _playPause,
+                ),
+                IconButton(
+                  icon: Icon(Icons.skip_next),
+                  onPressed: _skipForward,
+                ),
+                IconButton(
+                  icon: Icon(Icons.volume_up),
+                  onPressed: () {
+                    setState(() {
+                      showVolumeSlider = !showVolumeSlider;
+                    });
+                  },
+                ),
+               if (showVolumeSlider)
+                  Container(
+                    width: 100, // Adjust the width as needed
+                    child: Slider(
+                      value: currentVolume,
+                      onChanged: _setVolume,
+                      min: 0.0,
+                      max: 1.0,
+                    ),
+                  ),
+                   Text(_formatDuration(currentPosition)),
+                    Text('/${_formatDuration(totalDuration)}'),
+                  
+              ],
+            ),
+            // Audio Time Display
+           
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _formatDuration(Duration duration) {
+    final minutes = duration.inMinutes.toString().padLeft(2, '0');
+    final seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
+    return '$minutes:$seconds';
+  }
+}

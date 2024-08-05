@@ -7,7 +7,7 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telekom2/main.dart';
-import 'package:telekom2/screens/new_chat_module/provider/firebase_provider.dart';
+import 'package:telekom2/provider/firebase_provider.dart';
 import 'package:telekom2/screens/new_chat_module/service/firebase_firestore_service.dart';
 import 'package:telekom2/screens/new_chat_module/view/widgets/login_widget.dart';
 import 'package:telekom2/utils/ColorPath.dart';

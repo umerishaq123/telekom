@@ -5,7 +5,7 @@ import 'package:telekom2/screens/new_chat_module/constants.dart';
 import 'package:telekom2/screens/new_chat_module/view/screens/search_screen.dart';
 
 import '../../model/user.dart';
-import '../../provider/firebase_provider.dart';
+import '../../../../provider/firebase_provider.dart';
 import '../../service/firebase_firestore_service.dart';
 import '../../service/notification_service.dart';
 import '../widgets/user_item.dart';

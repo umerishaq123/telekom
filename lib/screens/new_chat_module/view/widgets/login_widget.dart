@@ -9,7 +9,7 @@ import 'package:telekom2/main.dart';
 import 'package:telekom2/provider/signup_provider.dart';
 import 'package:telekom2/screens/authentication/ForgotScreen.dart';
 import 'package:telekom2/screens/homescreeen/HomeScreen.dart';
-import 'package:telekom2/screens/new_chat_module/provider/firebase_provider.dart';
+import 'package:telekom2/provider/firebase_provider.dart';
 import 'package:telekom2/screens/new_chat_module/view/widgets/signup_widget.dart';
 import 'package:telekom2/utils/ColorPath.dart';
 import 'package:telekom2/utils/utils.dart';

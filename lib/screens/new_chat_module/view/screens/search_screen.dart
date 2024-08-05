@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:telekom2/main.dart';
 
 import '../../model/user.dart';
-import '../../provider/firebase_provider.dart';
+import '../../../../provider/firebase_provider.dart';
 import '../widgets/custom_text_form_field.dart';
 import '../widgets/empty_widget.dart';
 import '../widgets/user_item.dart';

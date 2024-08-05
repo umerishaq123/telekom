@@ -7,13 +7,19 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:telekom2/main.dart';
+import 'package:telekom2/provider/language_change_comtroller.dart';
+
+AppLanguage appLanguage = AppLanguage();
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget( MyApp(isLogin: false,));
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+     final String languageCode = prefs.getString('language_code') ?? '';
+    await tester.pumpWidget( MyApp(isLogin: false, locale:languageCode,));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
